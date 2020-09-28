@@ -1,255 +1,186 @@
 <template>
     <my-page class="page-reader" :title="title" :page="page" :style="pageStyle">
-        <div id="wrapper">
-            <div id="area"></div>
-            <div class="page-divider"></div>
-        </div>
-        <div id="prev" class="arrow" @click="prev" v-if="book">‹</div>
-        <div id="next" class="arrow" @click="next" v-if="book">›</div>
-        <ui-circular-progress class="loading" :size="40" v-if="loading"/>
-        <ui-drawer class="toc-drawer" right :open="open" :docked="false" @close="toggle()">
-            <ui-appbar title="目录">
-                <ui-icon-button icon="close" @click="toggle" slot="left" />
-            </ui-appbar>
-            <div class="drawer-body">
-                <ui-list>
-                    <ui-list-item :title="item.label"
-                                  :key="item.label"
-                                  @click="gotoDirectory(item)"
-                                  v-for="item in toc"/>
-                </ui-list>
-            </div>
-        </ui-drawer>
-        <ui-drawer class="info-drawer" right :open="infoVisible" :docked="false" @close="toggleInfo()">
-            <ui-appbar title="书籍信息">
-                <ui-icon-button icon="close" @click="toggleInfo" slot="left" />
-            </ui-appbar>
-            <div class="info-body">
-                <ui-article>
-                    <table v-if="meta">
-                        <tr class="item">
-                            <td class="key">书名</td>
-                            <td class="value">{{ meta.bookTitle }}</td>
-                        </tr>
-                        <tr class="item">
-                            <td class="key">封面</td>
-                            <td class="value">
-                                <img class="cover" :src="cover">
-                                <!-- {{ meta.cover }} -->
-                            </td>
-                        </tr>
-                        <tr class="item">
-                            <td class="key">作者</td>
-                            <td class="value">{{ meta.creator }}</td>
-                        </tr>
-                        <tr class="item">
-                            <td class="key">简介</td>
-                            <td class="value">{{ meta.description }}</td>
-                        </tr>
-                        <tr class="item">
-                            <td class="key">方向</td>
-                            <td class="value">{{ meta.direction }}</td>
-                        </tr>
-                        <!--<tr class="item">-->
-                        <!--<td class="key">identifier</td>-->
-                        <!--<td class="value">{{ meta.identifier }}</td>-->
-                        <!--</tr>-->
-                        <tr class="item">
-                            <td class="key">语言</td>
-                            <td class="value">{{ meta.language | lang }}</td>
-                        </tr>
-                        <tr class="item">
-                            <td class="key">布局</td>
-                            <td class="value">{{ meta.layout }}</td>
-                        </tr>
-                        <tr class="item">
-                            <td class="key">修改时间</td>
-                            <td class="value">{{ meta.modified_date | time }}</td>
-                        </tr>
-                        <!--<tr class="item">-->
-                        <!--<td class="key">orientation</td>-->
-                        <!--<td class="value">{{ meta.orientation }}</td>-->
-                        <!--</tr>-->
-                        <tr class="item">
-                            <td class="key">出版日期</td>
-                            <td class="value">{{ meta.pubdate | time }}</td>
-                        </tr>
-                        <tr class="item">
-                            <td class="key">出版社</td>
-                            <td class="value">{{ meta.pubtrsher }}</td>
-                        </tr>
-                        <tr class="item">
-                            <td class="key">版权</td>
-                            <td class="value">{{ meta.rights }}</td>
-                        </tr>
-                    </table>
-                </ui-article>
-            </div>
-        </ui-drawer>
-        <ui-drawer class="setting-drawer" right :open="settingVisible" :docked="false" @close="toggleSetting()">
-            <ui-appbar title="设置">
-                <ui-icon-button icon="close" @click="toggleSetting" slot="left" />
-            </ui-appbar>
-            <div class="setting-body">
-                <ui-select-field v-model="options.fontFamily" label="字体">
-                    <ui-menu-item value="Microsoft Yahei, Heiti SC, Heiti TC" title="黑体"/>
-                    <ui-menu-item value="SimSun, Songti SC, Songti TC" title="宋体"/>
-                    <ui-menu-item value="KaiTi, Kaiti SC, Kaiti TC" title="楷体"/>
-                    <ui-menu-item value="YouYuan, Yuanti SC, Yuanti TC" title="圆体"/>
-                    <ui-menu-item value="PingFang SC, PingFang TC" title="方体（Mac only）"/>
-                </ui-select-field>
-                <ui-text-field type="number" v-model="options.fontSize" label="文字大小" />
-                <!-- <ui-text-field type="number" v-model.number="options.theme" label="主题（0-3）" /> -->
-                <h3 class="form-label">主题</h3>
-                <ul class="theme-list">
-                    <li class="item" 
-                        :title="theme.name"
-                        v-for="theme, index in themes"
-                        @click="selectTheme(index)"
-                        :style="themeStyle(theme)"></li>
-                </ul>
-                <!-- <ui-select-field v-model="options.bold" label="粗细">
-                    <ui-menu-item value="normal" title="默认"/>
-                    <ui-menu-item value="bold" title="加粗"/>
-                </ui-select-field>
-                <ui-select-field v-model="options.bold" label="字间距">
-                    <ui-menu-item value="normal" title="0.8"/>
-                    <ui-menu-item value="normal" title="0.9"/>
-                    <ui-menu-item value="bold" title="1.0"/>
-                    <ui-menu-item value="bold" title="1.2"/>
-                    <ui-menu-item value="bold" title="1.4"/>
-                </ui-select-field>
-                <ui-select-field v-model="options.bold" label="行间距">
-                    <ui-menu-item value="normal" title="0.8"/>
-                    <ui-menu-item value="normal" title="0.9"/>
-                    <ui-menu-item value="bold" title="1.0"/>
-                    <ui-menu-item value="bold" title="1.2"/>
-                    <ui-menu-item value="bold" title="1.4"/>
-                </ui-select-field>
-                <ui-select-field v-model="options.bold" label="阅读区域大小">
-                    <ui-menu-item value="normal" title="700"/>
-                    <ui-menu-item value="normal" title="800"/>
-                    <ui-menu-item value="bold" title="950"/>
-                    <ui-menu-item value="bold" title="1000"/>
-                    <ui-menu-item value="bold" title="1100"/>
-                    <ui-menu-item value="bold" title="1200"/>
-                    <ui-menu-item value="bold" title="1400"/>
-                </ui-select-field> -->
-                <div>
-                    <ui-raised-button class="btn-clear" label="清除浏览器缓存" @click="clearStorage" />
-                </div>
-            </div>
-        </ui-drawer>
-        <ui-drawer class="bookmark-drawer" right :open="bookmarkVisible" :docked="false" @close="toggleBookmark()">
-            <ui-appbar title="书签">
-                <ui-icon-button icon="close" @click="toggleBookmark" title="关闭" slot="left" />
-                <ui-icon-button icon="add" @click="addBookmark" title="添加书签" slot="right" />
-            </ui-appbar>
+        <div class="drawer-body" slot="menu">
             <ui-list>
-                <ui-list-item :title="bookmark.name"
-                              :key="bookmark.id"
-                              @click="gotoBookmark(bookmark)"
-                              v-for="bookmark in bookmarks">
-                    <ui-icon-button icon="close" title="删除" @click.stop="removeBookmark(bookmark)" slot="right" />
-                </ui-list-item>
+                <ui-list-item :title="item.label"
+                                :key="item.label"
+                                @click="gotoDirectory(item)"
+                                v-for="item in toc"/>
             </ui-list>
-            <div class="bookmark-body">
-                <div v-if="!bookmarks.length">暂无书签，点击 “+” 添加书签</div>
+        </div>
+        <div>
+            <div id="wrapper">
+                <div id="area"></div>
+                <div class="page-divider"></div>
             </div>
-        </ui-drawer>
-        <ui-drawer class="note-drawer" :open="noteVisible" :docked="false" @close="toggleNote()">
-            <ui-appbar title="标注与笔记">
-                <ui-icon-button icon="close" @click="toggleNote" title="关闭" slot="left" />
-                <ui-icon-button icon="import_export" @click="exportNote" title="导出笔记" slot="right" v-if="notes.length" />
-            </ui-appbar>
-            <div class="total" v-if="notes.length">总数：{{ notes.length }}</div>
-            <ul class="note-list" v-if="notes.length">
-                <li class="item"
-                    :title="note.name"
-                    :key="note.id"
-                    @click="editNote(note)"
-                    v-for="note in notes">
-                    <div class="time">{{ note.createTime | simpleTime }}</div>
-                    <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
-                    <div class="note">{{ note.note || '暂无笔记' }}</div>
-                    <ui-icon-button class="close" icon="close" title="删除" @click.stop="removeNote(note)" />
-                    <ui-icon-button class="goto" icon="arrow_forward" title="跳转" @click.stop="gotoNote(note)" />
-                </li>
-            </ul>
-            <div class="note-body">
-                <div v-if="!notes.length">暂无标注和笔记</div>
-            </div>
-        </ui-drawer>
-        <ui-drawer class="edit-drawer" :open="editVisible" :docked="true" @close="toggleNote()">
-            <ui-appbar title="编辑笔记">
-                <ui-icon-button icon="close" @click="editVisible = false" title="关闭" slot="left" />
-                <!-- <ui-icon-button icon="check" @click="editVisible = false" title="保存" slot="right" /> -->
-            </ui-appbar>
-            <div class="edit-body" v-if="note">
-                <div class="time">{{ note.createTime | simpleTime }}</div>
-                <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
-                <textarea class="input" v-model="note.note" placeholder="输入笔记"></textarea>
-                <!-- <div class="note">{{ note.note || '暂无笔记' }}</div> -->
-            </div>
-        </ui-drawer>
-        <ui-drawer class="export-drawer" :open="exportVisible" :docked="false" @close="toggleNote()">
-            <ui-appbar title="导出笔记">
-                <ui-icon-button icon="close" @click="exportVisible = false" title="关闭" slot="left" />
-                <ui-icon-button icon="file_download" @click="exportMarkdown" title="导出 Markdown" slot="right" />
-            </ui-appbar>
-            <div class="export-body">
-                <div class="tip">提示：你可以复制下面内容，然后粘贴到笔记软件中即可</div>
+            <div id="prev" class="arrow" @click="prev" v-if="book">‹</div>
+            <div id="next" class="arrow" @click="next" v-if="book">›</div>
+            <ui-circular-progress class="loading" :size="40" v-if="loading"/>
+            <ui-drawer class="setting-drawer" right :open="settingVisible" :docked="false" @close="toggleSetting()">
+                <ui-appbar title="设置">
+                    <ui-icon-button icon="close" @click="toggleSetting" slot="left" />
+                </ui-appbar>
+                <div class="setting-body">
+                    <ui-select-field v-model="options.fontFamily" label="字体">
+                        <ui-menu-item value="Microsoft Yahei, Heiti SC, Heiti TC" title="黑体"/>
+                        <ui-menu-item value="SimSun, Songti SC, Songti TC" title="宋体"/>
+                        <ui-menu-item value="KaiTi, Kaiti SC, Kaiti TC" title="楷体"/>
+                        <ui-menu-item value="YouYuan, Yuanti SC, Yuanti TC" title="圆体"/>
+                        <ui-menu-item value="PingFang SC, PingFang TC" title="方体（Mac only）"/>
+                    </ui-select-field>
+                    <ui-text-field type="number" v-model="options.fontSize" label="文字大小" />
+                    <!-- <ui-text-field type="number" v-model.number="options.theme" label="主题（0-3）" /> -->
+                    <h3 class="form-label">主题</h3>
+                    <ul class="theme-list">
+                        <li class="item" 
+                            :title="theme.name"
+                            v-for="theme, index in themes"
+                            @click="selectTheme(index)"
+                            :style="themeStyle(theme)"></li>
+                    </ul>
+                    <!-- <ui-select-field v-model="options.bold" label="粗细">
+                        <ui-menu-item value="normal" title="默认"/>
+                        <ui-menu-item value="bold" title="加粗"/>
+                    </ui-select-field>
+                    <ui-select-field v-model="options.bold" label="字间距">
+                        <ui-menu-item value="normal" title="0.8"/>
+                        <ui-menu-item value="normal" title="0.9"/>
+                        <ui-menu-item value="bold" title="1.0"/>
+                        <ui-menu-item value="bold" title="1.2"/>
+                        <ui-menu-item value="bold" title="1.4"/>
+                    </ui-select-field>
+                    <ui-select-field v-model="options.bold" label="行间距">
+                        <ui-menu-item value="normal" title="0.8"/>
+                        <ui-menu-item value="normal" title="0.9"/>
+                        <ui-menu-item value="bold" title="1.0"/>
+                        <ui-menu-item value="bold" title="1.2"/>
+                        <ui-menu-item value="bold" title="1.4"/>
+                    </ui-select-field>
+                    <ui-select-field v-model="options.bold" label="阅读区域大小">
+                        <ui-menu-item value="normal" title="700"/>
+                        <ui-menu-item value="normal" title="800"/>
+                        <ui-menu-item value="bold" title="950"/>
+                        <ui-menu-item value="bold" title="1000"/>
+                        <ui-menu-item value="bold" title="1100"/>
+                        <ui-menu-item value="bold" title="1200"/>
+                        <ui-menu-item value="bold" title="1400"/>
+                    </ui-select-field> -->
+                    <div>
+                        <ui-raised-button class="btn-clear" label="清除浏览器缓存" @click="clearStorage" />
+                    </div>
+                </div>
+            </ui-drawer>
+            <ui-drawer class="bookmark-drawer" right :open="bookmarkVisible" :docked="false" @close="toggleBookmark()">
+                <ui-appbar title="书签">
+                    <ui-icon-button icon="close" @click="toggleBookmark" title="关闭" slot="left" />
+                    <ui-icon-button icon="add" @click="addBookmark" title="添加书签" slot="right" />
+                </ui-appbar>
+                <ui-list>
+                    <ui-list-item :title="bookmark.name"
+                                :key="bookmark.id"
+                                @click="gotoBookmark(bookmark)"
+                                v-for="bookmark in bookmarks">
+                        <ui-icon-button icon="close" title="删除" @click.stop="removeBookmark(bookmark)" slot="right" />
+                    </ui-list-item>
+                </ui-list>
+                <div class="bookmark-body">
+                    <div v-if="!bookmarks.length">暂无书签，点击 “+” 添加书签</div>
+                </div>
+            </ui-drawer>
+            <ui-drawer class="note-drawer" right :open="noteVisible" :docked="false" @close="toggleNote()">
+                <ui-appbar title="标注与笔记">
+                    <ui-icon-button icon="close" @click="toggleNote" title="关闭" slot="left" />
+                    <ui-icon-button icon="import_export" @click="exportNote" title="导出笔记" slot="right" v-if="notes.length" />
+                </ui-appbar>
                 <div class="total" v-if="notes.length">总数：{{ notes.length }}</div>
-                <ul class="note-list2" v-if="notes.length">
+                <ul class="note-list" v-if="notes.length">
                     <li class="item"
                         :title="note.name"
                         :key="note.id"
-                        @click="gotoBookmark(note)"
+                        @click="editNote(note)"
                         v-for="note in notes">
                         <div class="time">{{ note.createTime | simpleTime }}</div>
                         <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
                         <div class="note">{{ note.note || '暂无笔记' }}</div>
+                        <ui-icon-button class="close" icon="close" title="删除" @click.stop="removeNote(note)" />
+                        <ui-icon-button class="goto" icon="arrow_forward" title="跳转" @click.stop="gotoNote(note)" />
                     </li>
                 </ul>
                 <div class="note-body">
                     <div v-if="!notes.length">暂无标注和笔记</div>
                 </div>
-            </div>
-        </ui-drawer>
-        <ui-drawer class="search-drawer" right :open="searchVisible" :docked="false" @close="toggleSearch()">
-            <ui-appbar title="全文搜索">
-                <ui-icon-button icon="close" @click="toggleSearch" title="关闭" slot="left" />
-            </ui-appbar>
-            <div class="search-body">
-                <ui-text-field  v-model="keyword" />
-                <ui-icon-button icon="search" title="全文搜索" @click="search" />
-                <div v-if="results">
-                    <div v-if="!results.length">搜索不到结果</div>
-                    <ul class="result-list">
-                        <li class="item" v-for="result in results">
-                            <a class="link" href="#" @click.prevent="gotoCfi(result.cfi)" v-html="searhReslt(result.excerpt)">
-                            </a>
+            </ui-drawer>
+            <ui-drawer class="edit-drawer" :open="editVisible" :docked="true" @close="toggleNote()">
+                <ui-appbar title="编辑笔记">
+                    <ui-icon-button icon="close" @click="editVisible = false" title="关闭" slot="left" />
+                    <!-- <ui-icon-button icon="check" @click="editVisible = false" title="保存" slot="right" /> -->
+                </ui-appbar>
+                <div class="edit-body" v-if="note">
+                    <div class="time">{{ note.createTime | simpleTime }}</div>
+                    <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
+                    <textarea class="input" v-model="note.note" placeholder="输入笔记"></textarea>
+                    <!-- <div class="note">{{ note.note || '暂无笔记' }}</div> -->
+                </div>
+            </ui-drawer>
+            <ui-drawer class="export-drawer" :open="exportVisible" :docked="false" @close="toggleNote()">
+                <ui-appbar title="导出笔记">
+                    <ui-icon-button icon="close" @click="exportVisible = false" title="关闭" slot="left" />
+                    <ui-icon-button icon="file_download" @click="exportMarkdown" title="导出 Markdown" slot="right" />
+                </ui-appbar>
+                <div class="export-body">
+                    <div class="tip">提示：你可以复制下面内容，然后粘贴到笔记软件中即可</div>
+                    <div class="total" v-if="notes.length">总数：{{ notes.length }}</div>
+                    <ul class="note-list2" v-if="notes.length">
+                        <li class="item"
+                            :title="note.name"
+                            :key="note.id"
+                            @click="gotoBookmark(note)"
+                            v-for="note in notes">
+                            <div class="time">{{ note.createTime | simpleTime }}</div>
+                            <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
+                            <div class="note">{{ note.note || '暂无笔记' }}</div>
                         </li>
                     </ul>
+                    <div class="note-body">
+                        <div v-if="!notes.length">暂无标注和笔记</div>
+                    </div>
                 </div>
+            </ui-drawer>
+            <ui-drawer class="search-drawer" right :open="searchVisible" :docked="false" @close="toggleSearch()">
+                <ui-appbar title="全文搜索">
+                    <ui-icon-button icon="close" @click="toggleSearch" title="关闭" slot="left" />
+                </ui-appbar>
+                <div class="search-body">
+                    <ui-text-field  v-model="keyword" />
+                    <ui-icon-button icon="search" title="全文搜索" @click="search" />
+                    <div v-if="results">
+                        <div v-if="!results.length">搜索不到结果</div>
+                        <ul class="result-list">
+                            <li class="item" v-for="result in results">
+                                <a class="link" href="#" @click.prevent="gotoCfi(result.cfi)" v-html="searhReslt(result.excerpt)">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </ui-drawer>
+            <div class="page-info" v-if="info">
+                {{ info.page }} / {{ info.totalPage }} {{ info.page / info.totalPage * 100}}%
+                <!--<div v-if="this.book.currentChapter">当前章节页数：{{ this.book.currentChapter.pages }}</div>-->
             </div>
-        </ui-drawer>
-        <div class="page-info" v-if="info">
-            {{ info.page }} / {{ info.totalPage }} {{ info.page / info.totalPage * 100}}%
-            <!--<div v-if="this.book.currentChapter">当前章节页数：{{ this.book.currentChapter.pages }}</div>-->
-        </div>
-        <!--select menu-->
-        <div class="select-menu" id="select-menu">
-            <ul class="highlight-list">
-                <li class="item" 
-                    :style="{'background-color': highlight.color}"
-                    @click="highlightText(index)"
-                    v-for="highlight, index in highlights"></li>
-            </ul>
-            <div class="divider"></div>
-            <div class="menu-item" title="" @click="removeHighlight">删除标记</div>
-            <div class="menu-item" title="复制到剪切板" @click="copy">复制</div>
-            <div class="menu-item" title="使用百度搜索" @click="searchNetwork">搜索</div>
+            <!--select menu-->
+            <div class="select-menu" id="select-menu">
+                <ul class="highlight-list">
+                    <li class="item" 
+                        :style="{'background-color': highlight.color}"
+                        @click="highlightText(index)"
+                        v-for="highlight, index in highlights"></li>
+                </ul>
+                <div class="divider"></div>
+                <div class="menu-item" title="" @click="removeHighlight">删除标记</div>
+                <div class="menu-item" title="复制到剪切板" @click="copy">复制</div>
+                <div class="menu-item" title="使用百度搜索" @click="searchNetwork">搜索</div>
+            </div>
         </div>
     </my-page>
 </template>
@@ -377,12 +308,12 @@
                             click: this.toggleNote,
                             title: '标注与笔记'
                         },
-                        {
-                            type: 'icon',
-                            icon: 'list',
-                            click: this.toggle,
-                            title: '目录'
-                        },
+                        // {
+                        //     type: 'icon',
+                        //     icon: 'list',
+                        //     click: this.toggle,
+                        //     title: '目录'
+                        // },
                         {
                             type: 'icon',
                             icon: 'search',
@@ -400,19 +331,13 @@
                             icon: 'settings',
                             click: this.toggleSetting,
                             title: '设置'
-                        },
-                        {
-                            type: 'icon',
-                            icon: 'info',
-                            click: this.toggleInfo,
-                            title: '书籍信息'
-                        },
-                        {
-                            type: 'icon',
-                            icon: 'fullscreen',
-                            click: this.fullscreen,
-                            title: '全屏/取消全屏'
                         }
+                        // {
+                        //     type: 'icon',
+                        //     icon: 'fullscreen',
+                        //     click: this.fullscreen,
+                        //     title: '全屏/取消全屏'
+                        // }
                     ]
                 }
             }

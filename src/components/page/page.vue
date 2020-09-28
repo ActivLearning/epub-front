@@ -1,23 +1,7 @@
 <template>
     <ui-page :title="title || page.title" :page="page" :backable="backable" ref="page">
         <div slot="drawer">
-            <div class="header">
-                <img class="logo" src="/static/img/book.svg">
-            </div>
-            <ui-list @itemClick="toggle()">
-                <ui-list-item title="首页" to="/">
-                    <ui-icon slot="left" value="grade"/>
-                </ui-list-item>
-                <!-- <ui-list-item title="编辑器" to="/editor">
-                    <ui-icon slot="left" value="grade"/>
-                </ui-list-item> -->
-                <ui-list-item title="帮助" href="https://project.yunser.com/articles/ddfecb2002e511e9ad8de53d942e6191" target="_blank">
-                    <ui-icon slot="left" value="grade"/>
-                </ui-list-item>
-                <ui-list-item title="关于" href="https://project.yunser.com/products/c8b5618002e411e9ad8de53d942e6191" target="_blank">
-                    <ui-icon slot="left" value="grade"/>
-                </ui-list-item>
-            </ui-list>
+            <slot name="menu"></slot>
         </div>
         <slot></slot>
     </ui-page>
