@@ -24,10 +24,10 @@ module.exports = {
     entry: {
         app: './src/main.js'
     },
-    externals:{
-        'vue': 'Vue',
-        'vue-router': 'VueRouter'
-    },
+    // externals:{
+    //     'vue': 'Vue',
+    //     'vue-router': 'VueRouter'
+    // },
     output: {
         path: config.build.assetsRoot,
         filename: '[name].js',
@@ -40,7 +40,7 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
             '@': resolve('src'),
-            'yunser-components': 'yunser-ui-vue/src/components'
+            // 'yunser-components': 'yunser-ui-vue/src/components'
         }
     },
     module: {

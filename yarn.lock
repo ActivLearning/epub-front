@@ -4387,6 +4387,11 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+keycode@^2.1.9:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/keycode/download/keycode-2.2.0.tgz#3d0af56dc7b8b8e5cba8d0a97f107204eec22b04"
+  integrity sha1-PQr1bce4uOXLqNCpfxByBO7CKwQ=
+
 killable@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/killable/download/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"
@@ -4527,6 +4532,11 @@ lodash.tail@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npm.taobao.org/lodash.tail/download/lodash.tail-4.1.1.tgz#d2333a36d9e7717c8ad2f7cacafec7c32b444664"
   integrity sha1-0jM6NtnncXyK0vfKyv7HwytERmQ=
+
+lodash.tolower@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.npm.taobao.org/lodash.tolower/download/lodash.tolower-4.1.2.tgz#d6d309ac43eef8d44e8ded66b73dab0beb0806d7"
+  integrity sha1-1tMJrEPu+NROje1mtz2rC+sIBtc=
 
 lodash.uniq@^4.5.0:
   version "4.5.0"
@@ -7836,6 +7846,11 @@ vue-loader@^13.3.0:
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-router@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-3.0.1.tgz?cache=0&sync_timestamp=1601131064097&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-router%2Fdownload%2Fvue-router-3.0.1.tgz#d9b05ad9c7420ba0f626d6500d693e60092cc1e9"
+  integrity sha1-2bBa2cdCC6D2JtZQDWk+YAkswek=
+
 vue-style-loader@^3.0.0, vue-style-loader@^3.0.1:
   version "3.1.2"
   resolved "https://registry.npm.taobao.org/vue-style-loader/download/vue-style-loader-3.1.2.tgz#6b66ad34998fc9520c2f1e4d5fa4091641c1597a"
@@ -8199,3 +8214,11 @@ yargs@~3.10.0:
     cliui "^2.1.0"
     decamelize "^1.0.0"
     window-size "0.1.0"
+
+yunser-ui-vue@^0.1.25:
+  version "0.1.25"
+  resolved "https://registry.npm.taobao.org/yunser-ui-vue/download/yunser-ui-vue-0.1.25.tgz#6b9f3275d13bd9993dd0bde4725207dc8298c8a8"
+  integrity sha1-a58yddE72Zk90L3kclIH3IKYyKg=
+  dependencies:
+    keycode "^2.1.9"
+    lodash.tolower "^4.1.2"
