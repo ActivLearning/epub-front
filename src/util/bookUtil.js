@@ -14,6 +14,9 @@ function getCoverURL(book, callback) {
         };
         xhr.open('GET', blobUrl);
         xhr.send();
+    }).catch(function(e) {
+        console.log(e);
+        callback('');
     });
 }
 
