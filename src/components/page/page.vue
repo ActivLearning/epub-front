@@ -37,6 +37,9 @@
                 default: false
             }
         },
+        mounted() {
+            localStorage.setItem('drawerVisible', '0')
+        },
         methods: {
             toggle() {
                 console.log(this.$refs.page)
