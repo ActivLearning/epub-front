@@ -87,7 +87,7 @@ class BookDb {
             function read() {
                 var transaction = db.transaction(['Book']);
                 var objectStore = transaction.objectStore('Book');
-                var request = objectStore.get(1);
+                var request = objectStore.get(id);
 
                 request.onerror = function(event) {
                     console.log('事务失败');
