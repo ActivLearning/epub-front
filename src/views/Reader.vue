@@ -13,8 +13,8 @@
                 <div id="area"></div>
                 <div class="page-divider"></div>
             </div>
-            <div id="prev" class="arrow" @click="prev" v-if="book">‹</div>
-            <div id="next" class="arrow" @click="next" v-if="book">›</div>
+            <div id="prev" class="arrow" @click="prev" v-if="book && !isMobile">‹</div>
+            <div id="next" class="arrow" @click="next" v-if="book && !isMobile">›</div>
             <ui-circular-progress class="loading" :size="40" v-if="loading"/>
             <ui-drawer class="setting-drawer" right :open="settingVisible" :docked="false" @close="toggleSetting()">
                 <ui-appbar title="设置">
@@ -195,10 +195,11 @@
     const ePub = window.ePub
     const EPUBJS = window.EPUBJS
     const QiuPen = window.QiuPen
-
+    
     export default {
         data () {
             return {
+                isMobile: false,
                 reader: null,
                 title: 'epub 阅读器',
                 info: {
@@ -388,6 +389,10 @@
             }
         },
         methods: {
+            _isMobile() {
+                let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                return flag
+            },
             exportMarkdown() {
                 exportMarkdown(this.notes, this.meta)
             },
@@ -543,6 +548,7 @@
                 // get bookmarks
                 this.bookmarks = this.$storage.get('bookmarks-' + this.bookId, [])
                 this.loadNote()
+                this.isMobile = !!this._isMobile()
             },
             loadNote() {
                 // get notes
@@ -719,6 +725,25 @@
                             this.selected = true
                         }
                     }
+                })
+                // swipe to change page
+                let touchStartX
+                let touchStartTime
+                this.book.on('renderer:touchstart', event => {
+                    touchStartX = event.changedTouches[0].clientX
+                    touchStartTime = event.timeStamp
+                })
+                this.book.on('renderer:touchend', event => {
+                    const offsetX = event.changedTouches[0].clientX - touchStartX
+                    const time = event.timeStamp - touchStartTime
+                    // 控制翻页
+                    if (time < 500 && offsetX > 40) {
+                        this.prev()
+                    } else if (time < 500 && offsetX < 0) {
+                        this.next()
+                    }
+                    event.preventDefault()
+                    event.stopPropagation()
                 })
                 this.book.renderTo('area').then(() => {
                     this.setStyle()
