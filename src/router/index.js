@@ -28,7 +28,7 @@ let routes = [
 ]
 
 let router = new Router({
-    mode: 'history',
+    mode: 'hash',
     routes: routes,
     scrollBehavior (to, from, savedPosition) {
         return {

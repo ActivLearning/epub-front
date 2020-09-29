@@ -3,7 +3,7 @@
         <div id="main">
             <ul class="book-list">
                 <li class="item" v-for="book in books">
-                    <router-link class="link" :to="'/books/' + book.id" :title="book.name">
+                    <router-link class="link" :to="'/books/' + book.id + '?from=self'" :title="book.name">
                         <!-- <a class="remove" href="#" @click.stop.prevent="download(book)">下载</a> -->
                         <img class="cover" :src="book.cover" v-if="book.cover" />
                         <div class="cover-text" v-if="!book.cover">没有封面</div>
@@ -36,20 +36,7 @@
             return {
                 reader: null,
                 title: 'epub 阅读器',
-                books: [
-                    {
-                        id: '1',
-                        name: '呵呵哒',
-                        author: '陈建行',
-                        content: '123'
-                    },
-                    {
-                        id: '2',
-                        name: '致我们即将逝去的青春',
-                        author: '陈建行',
-                        content: '123'
-                    }
-                ],
+                books: [],
                 page: {
                     menu: [
                         {

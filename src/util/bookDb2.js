@@ -10,7 +10,7 @@ class BookDb {
     }
 
     init(cb) {
-        var request = indexedDB.open('eBookDB', 1);  // 打开 dbName 数据库
+        var request = indexedDB.open('eBookDB.db', 1);  // 打开 dbName 数据库
         request.onerror = function(e){              // 监听连接数据库失败时执行
             console.log('连接数据库失败');
         }
@@ -66,7 +66,7 @@ class BookDb {
         }
     }
 
-    getBook(id, cb) {
+    getBookSelf(id, cb) {
         let req = g_store.get(id)
         req.onsuccess = e => {
             console.log('getBook')
@@ -74,6 +74,61 @@ class BookDb {
             cb && cb(e.target.result)
         }
     }
+
+    // 从 dart 写入的读取
+    getBook(id, cb) {
+        console.log(id);
+        var request = window.indexedDB.open('eBookDB.db', 1);
+        var db;
+
+        request.onsuccess = function (event) {
+            db = request.result;
+            console.log('数据库打开成功');
+            function read() {
+                var transaction = db.transaction(['Book']);
+                var objectStore = transaction.objectStore('Book');
+                var request = objectStore.get(1);
+
+                request.onerror = function(event) {
+                    console.log('事务失败');
+                };
+
+                request.onsuccess = function( event) {
+                    console.log(id);
+                    if (request) {
+                        console.log(event.target.result);
+                        let arrayBuffer = event.target.result.content.buffer; 
+                        cb(arrayBuffer);
+                    } else {
+                        console.log('未获得数据记录');
+                    }
+                };
+            }
+
+            read();
+        };
+    }
+
+    getBookDart(id, cb) {
+        console.log('id: ', id);
+        var req = g_store.openCursor();
+        var result = [];
+
+        req.onsuccess = function (e) {
+            var cursor = e.target.result;
+            if (cursor) {
+                result.push(cursor.value);
+                cursor.continue();
+            } else {
+                console.log(result[0]);
+                let arrayBuffer = result[0].content.buffer; 
+
+                cb && cb({
+                    content: arrayBuffer
+                })
+            }
+        }
+    }  
 
     addBook(book, cb) {
         let req = g_store.put(book)

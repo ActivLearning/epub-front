@@ -520,17 +520,26 @@
                 this.options = this.$storage.get('options', this.options)
 
                 let bookId = this.$route.params.id
+                let from = this.$route.query.from
                 this.bookId = bookId
                 // TODO
                 if (!this.bookId) {
                     return
                 }
+                console.log('get book')
+                if (from === 'self') {
                 bookDb.init(() => {
-                    bookDb.getBook(this.bookId, book => {
+                        bookDb.getBookSelf(this.bookId, book => {
                         console.log(book)
                         this.loadBook(book.content)
                     })
                 })
+                } else {
+                    bookDb.getBook(this.bookId, book => {
+                        this.loadBook(book)
+                    })
+                }
+
                 // get bookmarks
                 this.bookmarks = this.$storage.get('bookmarks-' + this.bookId, [])
                 this.loadNote()
