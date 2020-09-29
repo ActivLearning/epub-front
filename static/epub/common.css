@@ -11,33 +11,39 @@
 /* annotation highlight */
 
 [class*=hl-] {
-    padding: 0 4px;
-    color: #FFF;
+    /* padding: 0 4px; */
+    color: #545454;
     cursor: pointer;
 }
 
 .hl-red {
-    background-color: #FFBA84;
+    /* background-color: #FFBA84; */
+    background-color: rgba(255,186,132,0.4);
 }
 
 .hl-orange {
-    background-color: #E2943B;
+    /* background-color: #E2943B; */
+    background-color: rgba(226,148,59,0.4);
 }
 
 .hl-yellow {
-    background-color: #F7C242;
+    /* background-color: #F7C242; */
+    background-color: rgba(247,194,66,0.4);
 }
 
 .hl-green {
-    background-color: #86C166;
+    /* background-color: #86C166; */
+    background-color: rgba(134,193,102,0.4);
 }
 
 .hl-blue {
-    background-color: #33A6B8;
+    /* background-color: #33A6B8; */
+    background-color: rgba(51,166,184,0.4);
 }
 
 .hl-purple {
-    background-color: #8A6BBE;
+    /* background-color: #8A6BBE; */
+    background-color: rgba(138,107,190,0.5);
 }
 
 [class*=line-] {
@@ -66,4 +72,7 @@
 
 .line-purple {
     border-color: #8A6BBE;
+}
+.calibre4{
+    line-height: 2.5 !important;
 }

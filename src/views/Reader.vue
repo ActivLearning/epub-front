@@ -252,7 +252,7 @@
                     {
                         id: '1',
                         name: '白色',
-                        color: '#000',
+                        color: '#333',
                         bgColor: '#fff'
                     },
                     {
