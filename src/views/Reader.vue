@@ -583,10 +583,12 @@
             prev() {
                 this.info.page--
                 this.book.prevPage()
+                document.getElementById('select-menu').style.visibility = 'hidden'
             },
             next() {
                 this.info.page++
                 this.book.nextPage()
+                document.getElementById('select-menu').style.visibility = 'hidden'
             },
             toggle() {
                 this.open = !this.open
