@@ -103,7 +103,7 @@
                         <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
                         <div class="note">{{ note.note || '暂无笔记' }}</div>
                         <ui-icon-button class="close" icon="close" title="删除" @click.stop="removeNote(note)" />
-                        <ui-icon-button class="goto" icon="arrow_forward" title="跳转" @click.stop="gotoNote(note)" />
+                        <!-- <ui-icon-button class="goto" icon="arrow_forward" title="跳转" @click.stop="gotoNote(note)" /> -->
                     </li>
                 </ul>
                 <div class="note-body">
