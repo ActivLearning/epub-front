@@ -934,7 +934,7 @@
     }
 }
 .edit-drawer {
-    left: 320px;
+    left: 0px;
     z-index: 100000000;
     width: 320px;
     max-width: 100%;
