@@ -15,23 +15,28 @@ function selected(e) {
     var x = e.clientX,
         y = e.clientY,
         menu = window.parent.document.getElementById('select-menu'),
+        wrap = window.parent.document.getElementById('wrapper'),
         menuHeight = window.parent.document.defaultView.getComputedStyle(menu, null).height,
         menuWidth = window.parent.document.defaultView.getComputedStyle(menu, null).width,
+        wrapHeight = window.parent.document.defaultView.getComputedStyle(wrap, null).height,
+        wrapWidth = window.parent.document.defaultView.getComputedStyle(wrap, null).width,
         screenHeight = window.parent.screen.availHeight,
         screenWidth = window.parent.screen.availWidth;
 
     menuHeight = parseInt(menuHeight);
     menuWidth = parseInt(menuWidth);
+    wrapHeight = parseInt(wrapHeight);
+    wrapWidth = parseInt(wrapWidth);
 
     if ((screenWidth - x) < menuWidth) {
         menu.style.left = x - menuWidth + 'px';
     } else {
-        menu.style.left = x + 'px'
+        menu.style.left = x > wrapWidth ? wrapWidth - menuWidth  + 'px' : Math.abs(x) + 'px'
     }
     if ((screenHeight - y) < menuHeight) {
         menu.style.top = y - menuHeight + 'px';
     } else {
-        menu.style.top = y + 'px'
+        menu.style.top = y > wrapHeight ? wrapHeight - menuHeight + 'px' : Math.abs(y) + 'px'
     }
 
     menu.style.visibility = 'visible';
