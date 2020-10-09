@@ -744,7 +744,7 @@
                     } else if (time < 500 && offsetX < 0) {
                         this.next()
                     }
-                    event.preventDefault()
+                    // event.preventDefault()
                     event.stopPropagation()
                 })
                 this.book.renderTo('area').then(() => {
