@@ -17,7 +17,7 @@
             <div id="next" class="arrow" @click="next" v-if="book && !isMobile">›</div>
             <ui-circular-progress class="loading" :size="40" v-if="loading"/>
             <ui-drawer class="setting-drawer" right :open="settingVisible" :docked="false" @close="toggleSetting()">
-                <ui-appbar title="设置">
+                <ui-appbar title="Settings">
                     <ui-icon-button icon="close" @click="toggleSetting" slot="left" />
                 </ui-appbar>
                 <div class="setting-body">
@@ -28,9 +28,9 @@
                         <ui-menu-item value="YouYuan, Yuanti SC, Yuanti TC" title="圆体"/>
                         <ui-menu-item value="PingFang SC, PingFang TC" title="方体（Mac only）"/>
                     </ui-select-field> -->
-                    <ui-text-field type="number" v-model="options.fontSize" label="文字大小" />
+                    <ui-text-field type="number" v-model="options.fontSize" label="Font size" />
                     <!-- <ui-text-field type="number" v-model.number="options.theme" label="主题（0-3）" /> -->
-                    <h3 class="form-label">主题</h3>
+                    <h3 class="form-label">Themes</h3>
                     <ul class="theme-list">
                         <li class="item" 
                             :title="theme.name"
@@ -66,33 +66,33 @@
                         <ui-menu-item value="bold" title="1400"/>
                     </ui-select-field> -->
                     <div>
-                        <ui-raised-button class="btn-clear" label="清除浏览器缓存" @click="clearStorage" />
+                        <ui-raised-button class="btn-clear" label="Clear browser cache" @click="clearStorage" />
                     </div>
                 </div>
             </ui-drawer>
             <ui-drawer class="bookmark-drawer" right :open="bookmarkVisible" :docked="false" @close="toggleBookmark()">
-                <ui-appbar title="书签">
-                    <ui-icon-button icon="close" @click="toggleBookmark" title="关闭" slot="left" />
-                    <ui-icon-button icon="add" @click="addBookmark" title="添加书签" slot="right" />
+                <ui-appbar title="Bookmarks">
+                    <ui-icon-button icon="close" @click="toggleBookmark" title="Close" slot="left" />
+                    <ui-icon-button icon="add" @click="addBookmark" title="Add bookmarks" slot="right" />
                 </ui-appbar>
                 <ui-list>
                     <ui-list-item :title="bookmark.name"
                                 :key="bookmark.id"
                                 @click="gotoBookmark(bookmark)"
                                 v-for="bookmark in bookmarks">
-                        <ui-icon-button icon="close" title="删除" @click.stop="removeBookmark(bookmark)" slot="right" />
+                        <ui-icon-button icon="close" title="Delete" @click.stop="removeBookmark(bookmark)" slot="right" />
                     </ui-list-item>
                 </ui-list>
                 <div class="bookmark-body">
-                    <div v-if="!bookmarks.length">暂无书签，点击 “+” 添加书签</div>
+                    <div v-if="!bookmarks.length">No bookmarks, click "+" to add bookmarks</div>
                 </div>
             </ui-drawer>
             <ui-drawer class="note-drawer" right :open="noteVisible" :docked="false" @close="toggleNote()">
-                <ui-appbar title="标注与笔记">
-                    <ui-icon-button icon="close" @click="toggleNote" title="关闭" slot="left" />
-                    <ui-icon-button icon="import_export" @click="exportNote" title="导出笔记" slot="right" v-if="notes.length" />
+                <ui-appbar title="Annotations">
+                    <ui-icon-button icon="close" @click="toggleNote" title="Close" slot="left" />
+                    <ui-icon-button icon="import_export" @click="exportNote" title="Export note" slot="right" v-if="notes.length" />
                 </ui-appbar>
-                <div class="total" v-if="notes.length">总数：{{ notes.length }}</div>
+                <div class="total" v-if="notes.length">Total: {{ notes.length }}</div>
                 <ul class="note-list" v-if="notes.length">
                     <li class="item"
                         :title="note.name"
@@ -101,35 +101,35 @@
                         v-for="note in notes">
                         <div class="time">{{ note.createTime | simpleTime }}</div>
                         <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
-                        <div class="note">{{ note.note || '暂无笔记' }}</div>
-                        <ui-icon-button class="close" icon="close" title="删除" @click.stop="removeNote(note)" />
+                        <div class="note">{{ note.note || 'No notes' }}</div>
+                        <ui-icon-button class="close" icon="close" title="Delete" @click.stop="removeNote(note)" />
                         <!-- <ui-icon-button class="goto" icon="arrow_forward" title="跳转" @click.stop="gotoNote(note)" /> -->
                     </li>
                 </ul>
                 <div class="note-body">
-                    <div v-if="!notes.length">暂无标注和笔记</div>
+                    <div v-if="!notes.length">No annotations and notes</div>
                 </div>
             </ui-drawer>
             <ui-drawer class="edit-drawer" :open="editVisible" :docked="true" @close="toggleNote()">
-                <ui-appbar title="编辑笔记">
-                    <ui-icon-button icon="close" @click="editVisible = false" title="关闭" slot="left" />
+                <ui-appbar title="Edit notes">
+                    <ui-icon-button icon="close" @click="editVisible = false" title="Close" slot="left" />
                     <!-- <ui-icon-button icon="check" @click="editVisible = false" title="保存" slot="right" /> -->
                 </ui-appbar>
                 <div class="edit-body" v-if="note">
                     <div class="time">{{ note.createTime | simpleTime }}</div>
                     <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
-                    <textarea class="input" v-model="note.note" placeholder="输入笔记"></textarea>
+                    <textarea class="input" v-model="note.note" placeholder="Input notes"></textarea>
                     <!-- <div class="note">{{ note.note || '暂无笔记' }}</div> -->
                 </div>
             </ui-drawer>
             <ui-drawer class="export-drawer" :open="exportVisible" :docked="false" @close="toggleNote()">
-                <ui-appbar title="导出笔记">
-                    <ui-icon-button icon="close" @click="exportVisible = false" title="关闭" slot="left" />
-                    <ui-icon-button icon="file_download" @click="exportMarkdown" title="导出 Markdown" slot="right" />
+                <ui-appbar title="Export notes">
+                    <ui-icon-button icon="close" @click="exportVisible = false" title="Close" slot="left" />
+                    <ui-icon-button icon="file_download" @click="exportMarkdown" title="Export Markdown" slot="right" />
                 </ui-appbar>
                 <div class="export-body">
-                    <div class="tip">提示：你可以复制下面内容，然后粘贴到笔记软件中即可</div>
-                    <div class="total" v-if="notes.length">总数：{{ notes.length }}</div>
+                    <div class="tip">Tips: You can copy the content below and paste it</div>
+                    <div class="total" v-if="notes.length">Total：{{ notes.length }}</div>
                     <ul class="note-list2" v-if="notes.length">
                         <li class="item"
                             :title="note.name"
@@ -138,23 +138,23 @@
                             v-for="note in notes">
                             <div class="time">{{ note.createTime | simpleTime }}</div>
                             <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
-                            <div class="note">{{ note.note || '暂无笔记' }}</div>
+                            <div class="note">{{ note.note || 'No notes' }}</div>
                         </li>
                     </ul>
                     <div class="note-body">
-                        <div v-if="!notes.length">暂无标注和笔记</div>
+                        <div v-if="!notes.length">No annotations and notes</div>
                     </div>
                 </div>
             </ui-drawer>
             <ui-drawer class="search-drawer" right :open="searchVisible" :docked="false" @close="toggleSearch()">
-                <ui-appbar title="全文搜索">
-                    <ui-icon-button icon="close" @click="toggleSearch" title="关闭" slot="left" />
+                <ui-appbar title="Search">
+                    <ui-icon-button icon="close" @click="toggleSearch" title="Close" slot="left" />
                 </ui-appbar>
                 <div class="search-body">
                     <ui-text-field  v-model="keyword" />
-                    <ui-icon-button icon="search" title="全文搜索" @click="search" />
+                    <ui-icon-button icon="search" title="Search" @click="search" />
                     <div v-if="results">
-                        <div v-if="!results.length">搜索不到结果</div>
+                        <div v-if="!results.length">No search results</div>
                         <ul class="result-list">
                             <li class="item" v-for="result in results">
                                 <a class="link" href="#" @click.prevent="gotoCfi(result.cfi)" v-html="searhReslt(result.excerpt)">
@@ -178,10 +178,10 @@
                 </ul>
                 <div class="divider"></div>
                 <div class="menu-list">
-                    <div class="menu-item" title="" @click="removeHighlight">删除标记</div>
-                    <div class="menu-item" title="添加笔记" @click="getNoteBySerStr">添加笔记</div>
-                    <div class="menu-item" title="复制到剪切板" @click="copy">复制</div>
-                    <div class="menu-item" title="使用百度搜索" @click="searchNetwork">搜索</div>
+                    <div class="menu-item" title="" @click="removeHighlight">Delete bookmarks</div>
+                    <div class="menu-item" title="Add notes" @click="getNoteBySerStr">Add notes</div>
+                    <div class="menu-item" title="Copy to clipboard" @click="copy">Copy</div>
+                    <!-- <div class="menu-item" title="使用百度搜索" @click="searchNetwork">Search</div> -->
                 </div>
             </div>
         </div>
@@ -204,7 +204,7 @@
             return {
                 isMobile: false,
                 reader: null,
-                title: 'epub 阅读器',
+                title: 'Epub Reader',
                 info: {
                     page: 1,
                     totalPage: 10
@@ -223,13 +223,13 @@
                     {
                         id: '1',
                         cfi: 'epubcfi(/6/2[chapter1]!/4/14/1:0)',
-                        name: '第一个书签',
+                        name: 'First bookmarks',
                         posY: 1
                     },
                     {
                         id: '2',
                         cfi: '',
-                        name: '第一个书签',
+                        name: 'Second bookmarks',
                         posY: 1
                     }
                 ],
@@ -379,9 +379,9 @@
                 let now = new Date()
                 let time = now.getTime() - date.getTime()
                 if (time < 60 * 60 * 1000) {
-                    return parseInt(time / (60 * 1000)) + ' 分钟前'
+                    return parseInt(time / (60 * 1000)) + ' minutes ago'
                 } else if (time < 24 * 60 * 1000) {
-                    return parseInt(time / (24 * 60 * 1000)) + ' 小时前'
+                    return parseInt(time / (24 * 60 * 1000)) + ' hours ago'
                 }
                 return format(new Date(value), 'yyyy-MM-dd')
             }
@@ -504,7 +504,7 @@
             },
             search() {
                 if (!this.keyword.length) {
-                    alert('请输入关键词')
+                    alert('Please enter search keyword')
                     return
                 }
                 let book = this.book
@@ -656,7 +656,7 @@
                 }
             },
             addBookmark() {
-                let name = '书签 ' + new Date().getHours() + ':' + new Date().getMinutes()
+                let name = 'Bookmark ' + new Date().getHours() + ':' + new Date().getMinutes()
                 this.bookmarks.unshift({
                     id: '' + new Date().getTime(), // TODO
                     cfi: this.locationCfi,
@@ -792,7 +792,7 @@
                 this.book.setStyle('background-color', this.themes[this.options.theme].bgColor)
             },
             clearStorage() {
-                let clear = confirm('清除浏览器缓存会删除所有的书签、标注和笔记')
+                let clear = confirm('Clearing the browser cache will delete all bookmarks, annotations and notes')
                 if (clear) {
                     localStorage.clear() // TODO
                     // TODO

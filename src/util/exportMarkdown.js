@@ -2,7 +2,7 @@
 export default function (notes, meta) {
     console.log(meta)
     let author = meta.creator ? ('-' + meta.creator) : ''
-    let content = `# 《${meta.bookTitle}${author}》阅读笔记
+    let content = `# ${meta.bookTitle}${author} notes
 
 `
     for (let note of notes) {
@@ -16,5 +16,5 @@ export default function (notes, meta) {
     const saveAs = window.saveAs
     var blob = new Blob([content], {type: 'text/plain;charset=utf-8'})
     console.log(content)
-    saveAs(blob, `《${meta.bookTitle}${author}》阅读笔记` + '.md')
+    saveAs(blob, `${meta.bookTitle}${author} notes` + '.md')
 }
