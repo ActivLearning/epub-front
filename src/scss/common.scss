@@ -8,6 +8,14 @@ body {
 .ui-page-common .ui-page-body {
     // overflow: hidden;
 }
+.ui-page-common .ui-page-container {
+    padding: 16px 80px 20px;
+}
+@media only screen and (max-width: 550px) {
+    .ui-page-common .ui-page-container {
+        padding: 16px;
+    }
+}
 .ui-file-button{
     position: absolute;
     left: 0;

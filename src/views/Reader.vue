@@ -747,7 +747,11 @@
                     // event.preventDefault()
                     event.stopPropagation()
                 })
-                this.book.renderTo('area').then(() => {
+                this.book.renderTo('area', {
+                    contained: true,
+                    width: '100%',
+                    height: '100%'
+                }).then(() => {
                     this.setStyle()
                     // this.book.goto('epubcfi(/6/6[id71]!/4[0-622b49af2d5d40458b0c96129dcf4ccb]/2/2[calibre_pb_0]/1:0)')
                 })
@@ -760,7 +764,7 @@
                 this.book.setStyle('font-size', this.options.fontSize + 'px')
                 this.book.setStyle('background-color', this.options.bgColor)
                 this.book.setStyle('font-family', this.options.fontFamily)
-                this.book.setStyle('line-height', 3)
+                this.book.setStyle('line-height', 1.55)
 
                 this.book.renderer.forceSingle(false)
 
@@ -799,11 +803,11 @@
 <style lang="scss" scoped>
 
 #prev {
-    left: 40px;
+    left: 28px;
 }
 
 #next {
-    right: 40px;
+    right: 28px;
 }
 
 .arrow {
@@ -827,7 +831,7 @@
 }
 
 #wrapper {
-    max-width: 1100px;
+    // max-width: 1100px;
     // padding: 16px;
     // width: 480px;
     // height: 640px;

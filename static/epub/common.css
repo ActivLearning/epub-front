@@ -76,3 +76,10 @@
 .calibre4{
     line-height: 2.5 !important;
 }
+
+img {
+    object-fit: contain;
+    max-width: 100%;
+    height: auto !important;
+}
+   
