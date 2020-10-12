@@ -69,10 +69,10 @@ QiuPen.load = function (book, bookKey) {
     hlObjs.forEach(function (item) {
         if (item.chapterPos === chapterPos) {
             result = item
+            if (!item) return
+            QiuPen.highlighter.deserialize(result.highlight)
         }
     })
-    if (!result) return
-    QiuPen.highlighter.deserialize(result.highlight)
 }
 
 QiuPen.clear = function (bookKey) {
