@@ -21,13 +21,13 @@
                     <ui-icon-button icon="close" @click="toggleSetting" slot="left" />
                 </ui-appbar>
                 <div class="setting-body">
-                    <ui-select-field v-model="options.fontFamily" label="字体">
+                    <!-- <ui-select-field v-model="options.fontFamily" label="字体">
                         <ui-menu-item value="Microsoft Yahei, Heiti SC, Heiti TC" title="黑体"/>
                         <ui-menu-item value="SimSun, Songti SC, Songti TC" title="宋体"/>
                         <ui-menu-item value="KaiTi, Kaiti SC, Kaiti TC" title="楷体"/>
                         <ui-menu-item value="YouYuan, Yuanti SC, Yuanti TC" title="圆体"/>
                         <ui-menu-item value="PingFang SC, PingFang TC" title="方体（Mac only）"/>
-                    </ui-select-field>
+                    </ui-select-field> -->
                     <ui-text-field type="number" v-model="options.fontSize" label="文字大小" />
                     <!-- <ui-text-field type="number" v-model.number="options.theme" label="主题（0-3）" /> -->
                     <h3 class="form-label">主题</h3>
