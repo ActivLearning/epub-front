@@ -784,7 +784,7 @@
                 this.book.setStyle('font-size', this.options.fontSize + 'px')
                 this.book.setStyle('background-color', this.options.bgColor)
                 this.book.setStyle('font-family', this.options.fontFamily)
-                this.book.setStyle('line-height', 2.5)
+                this.book.setStyle('line-height', 1.7)
 
                 this.book.renderer.forceSingle(false)
 
