@@ -177,9 +177,12 @@
                         v-for="highlight, index in highlights"></li>
                 </ul>
                 <div class="divider"></div>
-                <div class="menu-item" title="" @click="removeHighlight">删除标记</div>
-                <div class="menu-item" title="复制到剪切板" @click="copy">复制</div>
-                <div class="menu-item" title="使用百度搜索" @click="searchNetwork">搜索</div>
+                <div class="menu-list">
+                    <div class="menu-item" title="" @click="removeHighlight">删除标记</div>
+                    <div class="menu-item" title="添加笔记" @click="getNoteBySerStr">添加笔记</div>
+                    <div class="menu-item" title="复制到剪切板" @click="copy">复制</div>
+                    <div class="menu-item" title="使用百度搜索" @click="searchNetwork">搜索</div>
+                </div>
             </div>
         </div>
     </my-page>
@@ -249,6 +252,7 @@
                     lineHeight: 2,
                     theme: 0
                 },
+                selectionSerStr:'',
                 themes: [
                     {
                         id: '1',
@@ -414,6 +418,30 @@
                 }
                 this.$storage.set('highlight', store)
             },
+            getNoteBySerStr() {
+                let store = this.$storage.get('highlight', {})
+                this.notes = store[this.bookId] || []
+                let _this = this
+                this.notes.forEach(function (item){
+                    if (item.highlight === _this.selectionSerStr) {
+                       _this.note = item
+                       _this.editVisible = true
+                    }
+                })
+                
+            },
+            removeHighlightByStr(highlight) {
+                highlight = highlight || this.selectionSerStr
+                let store = this.$storage.get('highlight', {})
+                this.notes = store[this.bookId] || []
+                for (let i = 0; i < this.notes.length; i++) {
+                    if (this.notes[i].highlight === highlight) {
+                        this.notes.splice(i, 1)
+                        break
+                    }
+                }
+                this.$storage.set('highlight', store)
+            },
             copy() {
                 let iframe = document.getElementsByTagName('iframe')[0]
                 let result = iframe.contentWindow.document.execCommand('copy', false, null)
@@ -424,6 +452,7 @@
             },
             removeHighlight() {
                 QiuPen.highlighter.unhighlightSelection()
+                this.removeHighlightByStr()
                 // QiuPen.save(this.book, this.bookId, this.selectedText, this.locationCfi)
                 document.getElementById('select-menu').style.visibility = 'hidden'
             },
@@ -559,7 +588,6 @@
                 QiuPen.init()
             },
             initEvent() {
-                console.log('初始化事件')
                 document.addEventListener('keydown', this.onKeyDown = e => {
                     console.log(e.keyCode)
                     switch (e.keyCode) {
@@ -716,8 +744,7 @@
                     var render = this.book.renderer.render
                     var selectedContent = render.window.getSelection()
                     this.selection = selectedContent
-                    console.log(this.selection)
-                    console.log(this.selection.anchorNode.data.substring(this.selection.baseOffset, this.selection.extentOffset))
+                    this.selectionSerStr = QiuPen.highlighter.serialize()
                     this.selectedText = this.selection.anchorNode.data.substring(this.selection.baseOffset, this.selection.extentOffset)
                     // 若当前用户不在选中状态，并且选中文字不为空
                     if (this.selected === false) {
@@ -760,7 +787,7 @@
                 this.book.setStyle('font-size', this.options.fontSize + 'px')
                 this.book.setStyle('background-color', this.options.bgColor)
                 this.book.setStyle('font-family', this.options.fontFamily)
-                this.book.setStyle('line-height', 3)
+                this.book.setStyle('line-height', 2.5)
 
                 this.book.renderer.forceSingle(false)
 
@@ -1113,13 +1140,14 @@
 }
 .highlight-list {
     overflow: hidden;
-    padding-left: 16px;
+    /* padding:0  16px; */
+    text-align: center;
     .item {
-        float: left;
+        display: inline-block;
         width: 24px;
         height: 24px;
-        margin-right: 8px;
-        margin-bottom: 8px;
+        margin-right: 10px;
+        /* margin-bottom: 8px; */
         background-color: #f00;
         border-radius: 50%;
         cursor: pointer;
