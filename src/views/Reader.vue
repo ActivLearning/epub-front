@@ -65,9 +65,9 @@
                         <ui-menu-item value="bold" title="1200"/>
                         <ui-menu-item value="bold" title="1400"/>
                     </ui-select-field> -->
-                    <div>
+                    <!-- <div>
                         <ui-raised-button class="btn-clear" label="Clear browser cache" @click="clearStorage" />
-                    </div>
+                    </div> -->
                 </div>
             </ui-drawer>
             <ui-drawer class="bookmark-drawer" right :open="bookmarkVisible" :docked="false" @close="toggleBookmark()">
