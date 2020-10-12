@@ -809,15 +809,17 @@
         watch: {
             options: {
                 deep: true,
-                handler() {
-                    this.$storage.set('options', this.options)
+                handler(val) {
+                    this.$storage.set('options', val)
+                    if (+val.fontSize < 12) {
+                        val.fontSize = 12
+                    }
                     this.setStyle()
                 }
             },
             note: {
                 deep: true,
                 handler() {
-                    console.log('123')
                     let store = this.$storage.get('highlight', {})
                     store[this.bookId] = this.notes
                     this.$storage.set('highlight', store)
