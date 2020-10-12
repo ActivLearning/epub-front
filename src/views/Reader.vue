@@ -252,7 +252,7 @@
                     lineHeight: 2,
                     theme: 0
                 },
-                selectionSerStr:'',
+                selectionSerStr: '',
                 themes: [
                     {
                         id: '1',
@@ -271,12 +271,6 @@
                         name: '护眼',
                         color: '#000',
                         bgColor: '#ceeaba'
-                    },
-                    {
-                        id: '4',
-                        name: '夜间',
-                        color: '#fff',
-                        bgColor: '#000'
                     }
                 ],
                 highlights: [
@@ -422,13 +416,12 @@
                 let store = this.$storage.get('highlight', {})
                 this.notes = store[this.bookId] || []
                 let _this = this
-                this.notes.forEach(function (item){
+                this.notes.forEach(function (item) {
                     if (item.highlight === _this.selectionSerStr) {
                        _this.note = item
                        _this.editVisible = true
                     }
                 })
-                
             },
             removeHighlightByStr(highlight) {
                 highlight = highlight || this.selectionSerStr
