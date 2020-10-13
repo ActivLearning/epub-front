@@ -4,13 +4,28 @@ document.addEventListener('mouseup', function (e) {
     if (!sel.isCollapsed && true) selected(e); // TODO
     else window.parent.document.getElementById('select-menu').style.visibility = 'hidden';
 });
-document.addEventListener('touchend', function (e) {
-    var sel = window.getSelection();
-    if (!sel.isCollapsed) touchSelected(e); // TODO
-    else window.parent.document.getElementById('select-menu').style.visibility = 'hidden';
-});
+var u = navigator.userAgent
+var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
+if (isAndroid) {
+    document.addEventListener('touchcancel', function (e) {
+        handleAddEvent(e)
+    })
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault()
+    })
+} else {
+    document.addEventListener('touchend', function (e) {
+        handleAddEvent(e)
+    })
+}
 
-// 选中文本后的事件处理程序
+function handleAddEvent(e) {
+    console.log(e.changedTouches[0]);
+    var sel = window.getSelection()
+    if (!sel.isCollapsed) touchSelected(e)
+    else window.parent.document.getElementById('select-menu').style.visibility = 'hidden';
+}
+// 选中文本后的事件处理程序   
 function selected(e) {
     var x = e.clientX,
         y = e.clientY,
