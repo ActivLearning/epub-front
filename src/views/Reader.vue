@@ -178,9 +178,9 @@
                 </ul>
                 <div class="divider"></div>
                 <div class="menu-list">
-                    <div class="menu-item" title="" @click="removeHighlight">Delete bookmarks</div>
-                    <div class="menu-item" title="Add notes" @click="getNoteBySerStr">Add notes</div>
-                    <div class="menu-item" title="Copy to clipboard" @click="copy">Copy</div>
+                    <div class="menu-item" title="" @click="removeHighlight"><img src="../../static/img/delete.svg" alt=""></div>
+                    <div class="menu-item" title="Add notes" @click="getNoteBySerStr"><img src="../../static/img/Note.svg" alt=""></div>
+                    <div class="menu-item" title="Copy to clipboard" @click="copy"><img src="../../static/img/copy.svg" alt=""></div>
                     <!-- <div class="menu-item" title="使用百度搜索" @click="searchNetwork">Search</div> -->
                 </div>
             </div>
@@ -407,6 +407,7 @@
                 for (let i = 0; i < this.notes.length; i++) {
                     if (this.notes[i].id === note.id) {
                         this.notes.splice(i, 1)
+                        QiuPen.highlighter.unhighlightSelection()
                         break
                     }
                 }
