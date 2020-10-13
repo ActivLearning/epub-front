@@ -90,7 +90,7 @@
             <ui-drawer class="note-drawer" right :open="noteVisible" :docked="false" @close="toggleNote()">
                 <ui-appbar title="Annotations">
                     <ui-icon-button icon="close" @click="toggleNote" title="Close" slot="left" />
-                    <ui-icon-button icon="import_export" @click="exportNote" title="Export note" slot="right" v-if="notes.length" />
+                    <!-- <ui-icon-button icon="import_export" @click="exportNote" title="Export note" slot="right" v-if="notes.length" /> -->
                 </ui-appbar>
                 <div class="total" v-if="notes.length">Total: {{ notes.length }}</div>
                 <ul class="note-list" v-if="notes.length">
