@@ -28,7 +28,7 @@
                         <ui-menu-item value="YouYuan, Yuanti SC, Yuanti TC" title="圆体"/>
                         <ui-menu-item value="PingFang SC, PingFang TC" title="方体（Mac only）"/>
                     </ui-select-field> -->
-                    <ui-text-field type="number" v-model="options.fontSize" label="Font size" />
+                    <ui-text-field type="number" v-on:blur ="setDefaultFontSize" v-model="options.fontSize" label="Font size" />
                     <!-- <ui-text-field type="number" v-model.number="options.theme" label="主题（0-3）" /> -->
                     <h3 class="form-label">Themes</h3>
                     <ul class="theme-list">
@@ -667,6 +667,11 @@
                 })
                 this.$storage.set('bookmarks-' + this.bookId, this.bookmarks)
             },
+            setDefaultFontSize() {
+                if (this.options.fontSize === '') {
+                    this.options.fontSize = 16
+                }
+            },
             loadBook(content) {
                 this.book = ePub({
                     bookPath: content,
@@ -777,12 +782,12 @@
                     // this.book.goto('epubcfi(/6/6[id71]!/4[0-622b49af2d5d40458b0c96129dcf4ccb]/2/2[calibre_pb_0]/1:0)')
                 })
             },
-            setStyle() {
+            setStyle(fontSize) {
                 // TODO ???
                 if (!this.book) {
                     return
                 }
-                this.book.setStyle('font-size', this.options.fontSize + 'px')
+                this.book.setStyle('font-size', (fontSize || this.options.fontSize) + 'px')
                 this.book.setStyle('background-color', this.options.bgColor)
                 this.book.setStyle('font-family', this.options.fontFamily)
                 this.book.setStyle('line-height', 1.7)
@@ -805,10 +810,13 @@
                 deep: true,
                 handler(val) {
                     this.$storage.set('options', val)
-                    if (+val.fontSize < 12) {
-                        val.fontSize = 12
+
+                    if (+val.fontSize < 12 && val.fontSize !== '') {
+                        this.setStyle(12)
+                        val.fontSize = Math.abs(+val.fontSize)
+                    } else {
+                        this.setStyle()
                     }
-                    this.setStyle()
                 }
             },
             note: {
