@@ -12,7 +12,6 @@
             <div id="wrapper">
                 <div id="area"></div>
                 <div class="page-divider"></div>
-                <!-- <pdf src="http://172.18.20.68:8080/jiu.pdf"></pdf> -->
             </div>
             <div id="prev" class="arrow" @click="prev" v-if="book && !isMobile">‹</div>
             <div id="next" class="arrow" @click="next" v-if="book && !isMobile">›</div>
@@ -196,15 +195,11 @@
     import {format} from '../util/time'
     import reader from '../util/reader'
     import exportMarkdown from '../util/exportMarkdown'
-    import pdf from 'vue-pdf'
     const ePub = window.ePub
     const EPUBJS = window.EPUBJS
     const QiuPen = window.QiuPen
     
     export default {
-        components: {
-            pdf
-        },
         data () {
             return {
                 isMobile: false,
