@@ -117,7 +117,7 @@
                 </ui-appbar>
                 <div class="edit-body" v-if="note">
                     <div class="time">{{ note.createTime | simpleTime }}</div>
-                    <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
+                    <div class="mark" :style="{'border-color': note.color}">{{ selectedText }}</div>
                     <textarea class="input" v-model="note.note" placeholder="Input notes"></textarea>
                     <!-- <div class="note">{{ note.note || '暂无笔记' }}</div> -->
                 </div>
@@ -137,7 +137,7 @@
                             @click="gotoBookmark(note)"
                             v-for="note in notes">
                             <div class="time">{{ note.createTime | simpleTime }}</div>
-                            <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
+                            <div class="mark" :style="{'border-color': note.color}">{{ selectedText }}</div>
                             <div class="note">{{ note.note || 'No notes' }}</div>
                         </li>
                     </ul>
@@ -253,6 +253,7 @@
                     theme: 0
                 },
                 selectionSerStr: '',
+                selectedText: '',
                 themes: [
                     {
                         id: '1',
@@ -413,12 +414,16 @@
                 }
                 this.$storage.set('highlight', store)
             },
-            getNoteBySerStr() {
+            async getNoteBySerStr() {
+                if (!this.isMarked()) {
+                    await this.highlightText(0)
+                }
+
                 let store = this.$storage.get('highlight', {})
                 this.notes = store[this.bookId] || []
                 let _this = this
                 this.notes.forEach(function (item) {
-                    if (item.highlight === _this.selectionSerStr) {
+                    if (item.selectedText === _this.selectedText) {
                        _this.note = item
                        _this.editVisible = true
                     }
@@ -796,6 +801,14 @@
 
                 this.book.setStyle('color', this.themes[this.options.theme].color)
                 this.book.setStyle('background-color', this.themes[this.options.theme].bgColor)
+            },
+            isMarked() {
+                const result = this.notes.filter(note => note.selectedText === this.selectedText)
+
+                if (result.length > 0) {
+                    return true
+                }
+                return false
             },
             clearStorage() {
                 let clear = confirm('Clearing the browser cache will delete all bookmarks, annotations and notes')
