@@ -177,10 +177,19 @@
                         v-for="highlight, index in highlights"></li>
                 </ul>
                 <div class="divider"></div>
-                <div class="menu-list">
-                    <div class="menu-item" title="" @click="removeHighlight"><img src="../../static/img/delete.svg" alt=""></div>
-                    <div class="menu-item" title="Add notes" @click="getNoteBySerStr"><img src="../../static/img/Note.svg" alt=""></div>
-                    <div class="menu-item" title="Copy to clipboard" @click="copy"><img src="../../static/img/copy.svg" alt=""></div>
+                <div class="menu-list opt-list">
+                    <div class="menu-item" title="" @click="removeHighlight">
+                        <img src="../../static/img/delete.svg" alt="">
+                        <p>Delete</p>
+                    </div>
+                    <div class="menu-item" title="Add notes" @click="getNoteBySerStr">
+                        <img src="../../static/img/Note.svg" alt="">
+                        <p>Note</p>
+                    </div>
+                    <div class="menu-item" title="Copy to clipboard" @click="copy">
+                        <img src="../../static/img/copy.svg" alt="">
+                        <p>Copy</p>
+                    </div>
                     <!-- <div class="menu-item" title="使用百度搜索" @click="searchNetwork">Search</div> -->
                 </div>
             </div>
@@ -1171,6 +1180,14 @@
         background-color: #f00;
         border-radius: 50%;
         cursor: pointer;
+    }
+}
+.opt-list {
+    img {
+        padding-top: 10px;
+    }
+    p {
+        margin-bottom: 0;
     }
 }
 </style>
