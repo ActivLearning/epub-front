@@ -1,7 +1,11 @@
 <template>
     <div>
-        <pdf :src="pdfContent" :page="pdfpage" @click="pdfnext()"></pdf>
-        <div class="toast" v-show="toastFlag">{{toast}}</div>
+        <transition name="fade">
+            <pdf :src="pdfContent" :page="pdfpage" @click="pdfnext()"></pdf>
+        </transition>
+            <div class="toast" v-show="toastFlag">{{toast}}</div>
+            <div class="pageNum">{{pdfpage}}/{{total}}</div>
+        
     </div>
 </template>
 
@@ -18,7 +22,7 @@
             return {
                 pdfpage: 1,
                 pdfContent: '',
-                total: 3,
+                total: 1,
                 toastFlag: false,
                 toast: '',
                 bookId: ''
@@ -43,10 +47,13 @@
                     return
                 }
                 bookDb.init(() => {
-                    bookDb.getBookSelf(this.bookId, book => {
-                        
+                    bookDb.getBookSelf(this.bookId, book => {  
                         _this.pdfContent = book.content;
-                        console.log(_this.pdfContent)
+                        let newPdf = pdf.createLoadingTask(_this.pdfContent)
+                        newPdf.promise.then(pdf => {
+                            _this.total = pdf.numPages
+                            console.log(pdf.numPages)
+                        });
                     })
                 })
                 
@@ -110,6 +117,15 @@
         background: rgba(0, 0, 0, 0.8);
         padding: 8px 20px;
         border-radius: 5px;
-        font-size: 14px
+        font-size: 14px;
+        z-index: 99;
+    }
+    .pageNum{
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #999;
+        z-index: 99;
     }
 </style>

@@ -70,7 +70,7 @@ class BookDb {
         let req = g_store.get(id)
         req.onsuccess = e => {
             console.log('getBook')
-            // console.log(e.target.result)
+            console.log(e.target.result)
             cb && cb(e.target.result)
         }
     }
