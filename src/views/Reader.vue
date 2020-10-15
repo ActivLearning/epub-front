@@ -118,7 +118,7 @@
                 </ui-appbar>
                 <div class="edit-body" v-if="note">
                     <div class="time">{{ note.createTime | simpleTime }}</div>
-                    <div class="mark" :style="{'border-color': note.color}">{{ selectedText || note.selectedText }}</div>
+                    <div class="mark" :style="{'border-color': note.color}">{{ note.selectedText }}</div>
                     <textarea class="input" v-model="note.note" placeholder="Input notes"></textarea>
                     <!-- <div class="note">{{ note.note || '暂无笔记' }}</div> -->
                 </div>
@@ -412,6 +412,7 @@
                 this.note = note
                 console.log(note)
                 this.editVisible = true
+                document.getElementById('select-menu').style.visibility = 'hidden'
                 if(this.isMobile) {
                     this.noteVisible = false
                 }
@@ -429,6 +430,7 @@
                 this.$storage.set('highlight', store)
             },
             async getNoteBySerStr() {
+                this.getSelectionText(); // 适配Android手机选中文字不会自动取消的问题
                 if (!this.isMarked()) {
                     await this.highlightText(0)
                 }
