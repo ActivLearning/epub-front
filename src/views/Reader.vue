@@ -110,6 +110,7 @@
                     <div v-if="!notes.length">No annotations and notes</div>
                 </div>
             </ui-drawer>
+            <div class="mask" v-show="editVisible && isMobile" @click="editVisible = false"></div>
             <ui-drawer class="edit-drawer" :open="editVisible" :docked="true" @close="toggleNote()">
                 <ui-appbar title="Edit notes">
                     <ui-icon-button icon="close" @click="editVisible = false" title="Close" slot="left" />
@@ -117,7 +118,7 @@
                 </ui-appbar>
                 <div class="edit-body" v-if="note">
                     <div class="time">{{ note.createTime | simpleTime }}</div>
-                    <div class="mark" :style="{'border-color': note.color}">{{ selectedText }}</div>
+                    <div class="mark" :style="{'border-color': note.color}">{{ selectedText || note.selectedText }}</div>
                     <textarea class="input" v-model="note.note" placeholder="Input notes"></textarea>
                     <!-- <div class="note">{{ note.note || '暂无笔记' }}</div> -->
                 </div>
@@ -409,7 +410,11 @@
             },
             editNote(note) {
                 this.note = note
+                console.log(note)
                 this.editVisible = true
+                if(this.isMobile) {
+                    this.noteVisible = false
+                }
             },
             removeNote(note) {
                 let store = this.$storage.get('highlight', {})
@@ -438,6 +443,7 @@
                     }
                 })
             },
+            // 删除local storage highlight中对应数据
             removeHighlightByStr(highlight) {
                 highlight = highlight || this.selectionSerStr
                 let store = this.$storage.get('highlight', {})
@@ -469,11 +475,19 @@
                 document.getElementById('select-menu').style.visibility = 'hidden'
             },
             highlightText(index) {
+                this.getSelectionText() // 获取选中文字，兼容Android touchcancel
                 let name = 'hl-' + this.highlights[index].name
                 QiuPen.highlighter.highlightSelection(name)
                 QiuPen.save(this.book, this.bookId, this.selectedText, this.locationCfi, this.highlights[index].color)
                 this.loadNote()
                 document.getElementById('select-menu').style.visibility = 'hidden'
+            },
+            getSelectionText(){
+                let render = this.book.renderer.render
+                let sel = render.window.getSelection()
+                this.selection = sel
+                this.selectionSerStr = QiuPen.highlighter.serialize()
+                this.selectedText = sel.anchorNode && sel.anchorNode.data.substring(sel.baseOffset, sel.extentOffset)
             },
             fullscreen() {
                 // 进入全屏模式
@@ -755,11 +769,8 @@
                 })
                 this.book.on('renderer:mouseup', event => {
                     // 释放后检测用户选中的文字
-                    var render = this.book.renderer.render
-                    var selectedContent = render.window.getSelection()
-                    this.selection = selectedContent
-                    this.selectionSerStr = QiuPen.highlighter.serialize()
-                    this.selectedText = this.selection.anchorNode.data.substring(this.selection.baseOffset, this.selection.extentOffset)
+                    this.getSelectionText()
+
                     // 若当前用户不在选中状态，并且选中文字不为空
                     if (this.selected === false) {
                         console.log('啦啦2')
@@ -1190,6 +1201,14 @@
     p {
         margin-bottom: 0;
     }
+}
+.mask{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.54);    
 }
 </style>
 
