@@ -1,11 +1,10 @@
 <template>
     <div>
-        <transition name="fade">
-            <pdf :src="pdfContent" :page="pdfpage" @click="pdfnext()"></pdf>
-        </transition>
-            <div class="toast" v-show="toastFlag">{{toast}}</div>
-            <div class="pageNum">{{pdfpage}}/{{total}}</div>
-        
+        <pdf :src="pdfContent" :page="pdfpage" @click="pdfnext()"></pdf>
+        <div class="toast" v-show="toastFlag">{{toast}}</div>
+        <div class="pageNum">{{pdfpage}}/{{total}}</div>
+        <div id="prev" class="arrow" @click="prev" v-if="!isMobile">‹</div>
+        <div id="next" class="arrow" @click="next" v-if="!isMobile">›</div>
     </div>
 </template>
 
@@ -25,13 +24,16 @@
                 total: 1,
                 toastFlag: false,
                 toast: '',
-                bookId: ''
+                bookId: '',
+                isMobile: false,
             }
                 
         },
         mounted() {
             this.init()
             this.initEvent()
+            this.isMobile = !!this._isMobile()
+            console.log(this.isMobile);
                    
         },
         destroyed() {
@@ -91,6 +93,10 @@
                     this.showToast('This is the last page.')
                 }
             },
+            _isMobile() {
+                let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+                return flag
+            },
             showToast(txt ,time = 2000) {
                 this.toastFlag = true
                 this.toast = txt
@@ -127,5 +133,32 @@
         transform: translateX(-50%);
         color: #999;
         z-index: 99;
+    }
+    #prev {
+        left: 28px;
+    }
+
+    #next {
+        right: 28px;
+    }
+
+    .arrow {
+        position: absolute;
+        top: 50%;
+        margin-top: -32px;
+        font-size: 64px;
+        color: #E2E2E2;
+        font-family: arial, sans-serif;
+        font-weight: bold;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        &:hover {
+            color: #777;
+        }
+        &:active {
+            color: #000;
+        }
     }
 </style>
