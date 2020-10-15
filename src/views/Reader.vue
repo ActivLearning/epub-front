@@ -169,6 +169,15 @@
                 {{ info.page }} / {{ info.totalPage }} {{ info.page / info.totalPage * 100}}%
                 <!--<div v-if="this.book.currentChapter">当前章节页数：{{ this.book.currentChapter.pages }}</div>-->
             </div>
+            <input class="progress" 
+                type="range"
+                max="100"
+                min="0"
+                step="0.1"
+                @change="onProgressChange($event.target.value)"
+                v-model="progress"
+                ref="progress">
+
             <!--select menu-->
             <div class="select-menu" id="select-menu">
                 <ul class="highlight-list">
@@ -212,6 +221,8 @@
     export default {
         data () {
             return {
+                progress: 0,
+                locations: null,
                 isMobile: false,
                 reader: null,
                 title: 'Epub Reader',
@@ -635,11 +646,13 @@
             prev() {
                 this.info.page--
                 this.book.prevPage()
+                this.setProgress()
                 document.getElementById('select-menu').style.visibility = 'hidden'
             },
             next() {
                 this.info.page++
                 this.book.nextPage()
+                this.setProgress()
                 document.getElementById('select-menu').style.visibility = 'hidden'
             },
             toggle() {
@@ -666,18 +679,26 @@
             },
             gotoDirectory(item) {
                 this.open = false
-                this.book.goto(item.href)
+                this.book.goto(item.href).then(() => {
+                    this.setProgress()
+                })
             },
             gotoBookmark(bookmark) {
-                this.book.goto(bookmark.cfi)
+                this.book.goto(bookmark.cfi).then(() => {
+                    this.setProgress()
+                })
                 this.bookmarkVisible = false
             },
             gotoCfi(cfi) {
-                this.book.goto(cfi)
+                this.book.goto(cfi).then(() => {
+                    this.setProgress()
+                })
                 this.searchVisible = false
             },
             gotoNote(note) {
-                this.book.goto(note.cfi)
+                this.book.goto(note.cfi).then(() => {
+                    this.setProgress()
+                })
             },
             removeBookmark(bookmark) {
                 for (let i = 0; i < this.bookmarks.length; i++) {
@@ -731,6 +752,9 @@
                     })
                     this.loading = false
                     this.initAfterLoadedBook()
+                    this.book.locations.generate()
+                    // 保存locations对象
+                    this.locations = this.book.locations
                 })
                 this.book.renderer.forceSingle(false)
                 // epub.js能捕获用户在书籍上的鼠标释放事件，使用self.selected是为了防止用户重复选中。
@@ -832,6 +856,20 @@
                     return true
                 }
                 return false
+            },
+            onProgressChange(progress) {
+                const cfi = this.locations.cfiFromPercentage(this.progress / 100)
+                console.log('cfi: ', cfi)
+
+                this.gotoCfi(cfi)
+                // this.rendition.display(cfi)
+            },
+            setProgress() {
+                const currentLocationCfi = this.book.getCurrentLocationCfi()
+                console.log('currentLocationCfi: ', currentLocationCfi)
+                this.progress = this.locations.percentageFromCfi(currentLocationCfi) * 100
+                
+                console.log(this.progress)
             },
             clearStorage() {
                 let clear = confirm('Clearing the browser cache will delete all bookmarks, annotations and notes')
@@ -1210,7 +1248,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,.54);    
+    background: rgba(0,0,0,.54);
+}
+.progress {
+    width: 100%;
 }
 </style>
 
