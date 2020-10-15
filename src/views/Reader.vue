@@ -658,6 +658,7 @@
             },
             gotoCfi(cfi) {
                 this.book.goto(cfi)
+                this.searchVisible = false
             },
             gotoNote(note) {
                 this.book.goto(note.cfi)
