@@ -200,7 +200,10 @@
                         <img src="../../static/img/copy.svg" alt="">
                         <p>Copy</p>
                     </div>
-                    <!-- <div class="menu-item" title="使用百度搜索" @click="searchNetwork">Search</div> -->
+                    <div class="menu-item" title="Wikipedia" @click="searchNetwork">
+                        <img src="../../static/img/wikipedia-w.svg" alt="">
+                        <p>Wikipedia</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -494,7 +497,7 @@
                 document.getElementById('select-menu').style.visibility = 'hidden'
             },
             searchNetwork() {
-                window.open('https://www.baidu.com/s?wd=' + this.selectedText)
+                window.open('https://en.wikipedia.org/wiki/' + this.selectedText)
                 document.getElementById('select-menu').style.visibility = 'hidden'
             },
             highlightText(index) {
@@ -1247,6 +1250,7 @@
 .opt-list {
     img {
         padding-top: 10px;
+        height: 30px;
     }
     p {
         margin-bottom: 0;
