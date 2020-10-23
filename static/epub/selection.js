@@ -89,3 +89,12 @@ document.addEventListener('keydown', function (e) {
         document.execCommand('copy', false, null)
     }
 })
+
+document.addEventListener('click', function (e) {
+    console.log('e: ', e);
+    if (e && e.target && e.target.nodeName === 'IMG') {
+        parent.window.setImageSrc(e.target.currentSrc)
+    } else if (e && e.target && e.target.nodeName === 'image') {
+        parent.window.setImageSrc(e.target.href.baseVal)
+    }
+})

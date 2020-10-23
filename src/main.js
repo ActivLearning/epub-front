@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import hevueImgPreview from 'hevue-img-preview'
 import YunserUI from 'yunser-ui-vue'
 import 'yunser-ui-vue/dist/yunser-ui.css'
 import App from './App'
@@ -12,6 +13,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$storage = storage
 
+Vue.use(hevueImgPreview)
 Vue.use(YunserUI)
 Vue.use(ui)
 

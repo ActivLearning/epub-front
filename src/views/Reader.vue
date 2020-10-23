@@ -221,6 +221,7 @@
     export default {
         data () {
             return {
+                imageSrc: '',
                 progress: 0,
                 locations: null,
                 isMobile: false,
@@ -374,6 +375,15 @@
         mounted() {
             this.init()
             this.initEvent()
+            window.setImageSrc = (src) => {
+                this.imageSrc = src
+                this.$hevueImgPreview({
+                    url: this.imageSrc,
+                    closeColor: '#e0e0e0',
+                    mainBackground: 'rgba(0, 0, 0, .5)'
+                })
+            }
+            console.log(window.setImageSrc);
         },
         destroyed() {
             this.book && this.book.destroy()
@@ -1296,5 +1306,8 @@
             font-weight: bold;
         }
     }
+}
+#hevue-wrap .he-control-bar {
+    width: initial;
 }
 </style>

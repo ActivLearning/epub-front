@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 const Book = resolve => require(['@/views/Book'], resolve)
 const Reader = resolve => require(['@/views/Reader'], resolve)
+const EpubReader = resolve => require(['@/views/EpubReader'], resolve)
 const PdfReader = resolve => require(['@/views/PdfReader'], resolve)
 const Editor = resolve => require(['@/views/Editor'], resolve)
 const Error404 = resolve => require(['@/views/error/Error404'], resolve)
@@ -17,6 +18,10 @@ let routes = [
     {
         path: '/books/:id',
         component: Reader
+    },
+    {
+        path: '/ebook/:id',
+        component: EpubReader
     },
     {
         path: '/pdf/:id',

@@ -11,6 +11,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "epubjs": "^0.3.88",
+    "hevue-img-preview": "^2.5.2",
     "vue": "2.5.2",
     "vue-pdf": "^4.1.0",
     "vue-router": "3.0.1",

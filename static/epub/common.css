@@ -81,6 +81,11 @@ img {
     object-fit: contain;
     max-width: 100%;
     height: auto !important;
+    cursor: pointer;
+}
+
+image {
+    cursor: pointer;
 }
 
 a:hover {
