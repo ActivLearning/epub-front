@@ -12,6 +12,10 @@
             <div id="wrapper">
                 <div id="area"></div>
                 <div class="page-divider"></div>
+                <dialog-wiki
+                    :wikiSrc="wikiSrc"
+                    :show.sync="showWikiDialog"
+                ></dialog-wiki>
             </div>
             <div id="prev" class="arrow" @click="prev" v-if="book && !isMobile">‹</div>
             <div id="next" class="arrow" @click="next" v-if="book && !isMobile">›</div>
@@ -217,14 +221,21 @@
     import {format} from '../util/time'
     import reader from '../util/reader'
     import exportMarkdown from '../util/exportMarkdown'
+    import DialogWiki from '../components/DialogWiki'
     const ePub = window.ePub
     const EPUBJS = window.EPUBJS
     const QiuPen = window.QiuPen
     
     export default {
+        components: {
+            DialogWiki,
+        },
+
         data () {
             return {
                 imageSrc: '',
+                wikiSrc: '',
+                showWikiDialog: false,
                 progress: 0,
                 locations: null,
                 isMobile: false,
@@ -497,8 +508,9 @@
                 document.getElementById('select-menu').style.visibility = 'hidden'
             },
             searchNetwork() {
-                window.open('https://en.wikipedia.org/wiki/' + this.selectedText)
                 document.getElementById('select-menu').style.visibility = 'hidden'
+                this.wikiSrc = 'https://en.wikipedia.org/wiki/' + this.selectedText
+                this.showWikiDialog = true
             },
             highlightText(index) {
                 this.getSelectionText() // 获取选中文字，兼容Android touchcancel
