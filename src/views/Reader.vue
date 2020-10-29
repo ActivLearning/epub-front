@@ -13,6 +13,7 @@
                 <div id="area"></div>
                 <div class="page-divider"></div>
                 <dialog-wiki
+                    :wikiData="wikiData"
                     :wikiSrc="wikiSrc"
                     :show.sync="showWikiDialog"
                 ></dialog-wiki>
@@ -216,9 +217,11 @@
 
 <script>
     /* eslint-disable2 */
+    
     import bookDb from '../util/bookDb2'
     import {getCoverURL} from '../util/bookUtil'
     import {format} from '../util/time'
+    import { wikipedia } from '@/services/api'
     import reader from '../util/reader'
     import exportMarkdown from '../util/exportMarkdown'
     import DialogWiki from '../components/DialogWiki'
@@ -234,6 +237,7 @@
         data () {
             return {
                 imageSrc: '',
+                wikiData: [],
                 wikiSrc: '',
                 showWikiDialog: false,
                 progress: 0,
@@ -397,7 +401,6 @@
                     mainBackground: 'rgba(0, 0, 0, .5)'
                 })
             }
-            console.log(window.setImageSrc);
         },
         destroyed() {
             this.book && this.book.destroy()
@@ -507,10 +510,25 @@
                 // QiuPen.save(this.book, this.bookId, this.selectedText, this.locationCfi)
                 document.getElementById('select-menu').style.visibility = 'hidden'
             },
+            async getWiki(query) {
+                try {
+                    const data = await wikipedia.searchWikipedia({
+                        q: query,
+                        limit: 3
+                    })
+                    if (data && data.pages) {
+                        this.wikiData = data.pages || []
+                        this.showWikiDialog = true
+                    }
+                } catch (e) {
+                    console.log(e);
+                    //
+                }
+            },
             searchNetwork() {
                 document.getElementById('select-menu').style.visibility = 'hidden'
                 this.wikiSrc = 'https://en.wikipedia.org/wiki/' + this.selectedText
-                this.showWikiDialog = true
+                this.getWiki(this.selectedText)
             },
             highlightText(index) {
                 this.getSelectionText() // 获取选中文字，兼容Android touchcancel

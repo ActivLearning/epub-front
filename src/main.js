@@ -6,6 +6,7 @@ import App from './App'
 import router from './router'
 import storage from '@/util/storage'
 import ui from './components/index'
+import config from './config/index'
 import './util/highlight'
 import './scss/main.scss'
 
@@ -16,6 +17,7 @@ Vue.prototype.$storage = storage
 Vue.use(hevueImgPreview)
 Vue.use(YunserUI)
 Vue.use(ui)
+Vue.use(config, router)
 
 /* eslint-disable no-new */
 new Vue({

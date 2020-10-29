@@ -1,17 +1,28 @@
-let debug = process.env.NODE_ENV !== 'production'
+import axios from 'axios';
+import httpConfig from './httpConfig';
+import routerConfig from './routerConfig';
 
-let imgDomain
-let apiDomain
-if (process.env.NODE_ENV === 'production') {
-    imgDomain = 'http://120.79.29.47'
-    apiDomain = 'http://example.yunser.com'
-} else {
-    imgDomain = 'http://120.79.29.47'
-    apiDomain = 'http://localhost'
-}
+export default {
+    install(Vue, router) {
+        /* 默认http配置 */
+        Vue.prototype.$http = axios;
+        Vue.http = axios;
+        const http = Vue.http;
 
-module.exports = {
-    imgDomain,
-    apiDomain,
-    debug
-}
+        http.interceptors.request.use((config) => {
+            return config;
+        }, error => Promise.reject(error));
+
+        http.interceptors.response.use((response) => {
+            return response;
+        }, (error) => {
+            return Promise.reject(error);
+        });
+
+        httpConfig(Vue);
+
+        if (router) {
+            routerConfig(router);
+        }
+    },
+};
