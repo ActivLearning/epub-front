@@ -14,4 +14,4 @@ package-lock.json
 *.njsproj
 *.sln
 
-/static/tmp
+/epubStatic/tmp

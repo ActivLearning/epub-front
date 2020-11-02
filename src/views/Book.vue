@@ -14,7 +14,7 @@
                 </li>
             </ul>
             <div class="empty-box" v-if="!books.length">
-                <img src="/static/img/empty.svg"/>
+                <img src="/epubStatic/img/empty.svg"/>
                 <div class="text">暂无书籍，你可以添加右上角的“+”添加书籍</div>
             </div>
             <ui-raised-button class="file-btn" label="从文件中导入" style="display: none">
@@ -210,7 +210,7 @@
             margin-right: 16px;
             margin-bottom: 16px;
             background-color: #fff;
-            /*background-image: url("/static/img/bg_1.jpg");*/
+            /*background-image: url("/epubStatic/img/bg_1.jpg");*/
             box-shadow: 0 1px 6px rgba(0,0,0,.117647), 0 1px 4px rgba(0,0,0,.117647);
             &:hover {
                 .remove {

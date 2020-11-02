@@ -1,15 +1,15 @@
 <template>
     <div class="dialog-wrap">
         <ui-dialog  v-click-outside="onClickOutside" :open.sync="innerShow">
-            <div class="wiki-wrap">
+            <div v-if="wikiData[0]" class="wiki-wrap">
                 <div class="img-box">
-                    <img v-if="wikiData[0] && wikiData[0].thumbnail && wikiData[0].thumbnail.url" :src="wikiData[0].thumbnail.url" alt="">
+                    <img v-if="wikiData[0].thumbnail && wikiData[0].thumbnail.url" :src="wikiData[0].thumbnail.url" alt="">
                     <div v-else class="image__error"></div>
                 </div>
                 <div class="cont-wrap">
                     <div class="cont">
-                        <div class="title">{{ wikiData[0].title }}</div>
-                        <div v-if="wikiData[0].description && wikiData[0].description" class="desc">{{ wikiData[0].description }}</div>
+                        <div v-if="wikiData[0].title" class="title">{{ wikiData[0].title }}</div>
+                        <div v-if="wikiData[0].description" class="desc">{{ wikiData[0].description }}</div>
                         <div v-else v-html="wikiData[0].excerpt" class="excerpt"></div>
                     </div>
                 </div>

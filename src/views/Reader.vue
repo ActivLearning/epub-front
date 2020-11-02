@@ -194,19 +194,19 @@
                 <div class="divider"></div>
                 <div class="menu-list opt-list">
                     <div class="menu-item" title="" @click="removeHighlight">
-                        <img src="../../static/img/delete.svg" alt="">
+                        <img src="../../epubStatic/img/delete.svg" alt="">
                         <p>Delete</p>
                     </div>
                     <div class="menu-item" title="Add notes" @click="getNoteBySerStr">
-                        <img src="../../static/img/Note.svg" alt="">
+                        <img src="../../epubStatic/img/Note.svg" alt="">
                         <p>Note</p>
                     </div>
                     <div class="menu-item" title="Copy to clipboard" @click="copy">
-                        <img src="../../static/img/copy.svg" alt="">
+                        <img src="../../epubStatic/img/copy.svg" alt="">
                         <p>Copy</p>
                     </div>
                     <div class="menu-item" title="Wikipedia" @click="searchNetwork">
-                        <img src="../../static/img/wikipedia-w.svg" alt="">
+                        <img src="../../epubStatic/img/wikipedia-w.svg" alt="">
                         <p>Wikipedia</p>
                     </div>
                 </div>
@@ -633,25 +633,31 @@
 
                 let bookId = this.$route.params.id
                 let from = this.$route.query.from
+                let url = this.$route.query.url
+                let openAs = this.$route.query.openAs
                 this.bookId = bookId
                 // TODO
                 if (!this.bookId) {
                     return
                 }
                 console.log('get book')
-                if (from === 'self') {
-                bookDb.init(() => {
-                        bookDb.getBookSelf(this.bookId, book => {
-                        console.log(book)
-                        this.loadBook(book.content)
-                    })
-                })
+                if (url) {
+                    this.loadBook(url, true)
                 } else {
-                    bookDb.getBook(this.bookId, book => {
-                        this.loadBook(book)
-                    })
+                    if (from === 'self') {
+                        bookDb.init(() => {
+                                bookDb.getBookSelf(this.bookId, book => {
+                                console.log(book)
+                                this.loadBook(book.content)
+                            })
+                        })
+                    } else {
+                        bookDb.getBook(this.bookId, book => {
+                            this.loadBook(book)
+                        })
+                    }
                 }
-
+                
                 // get bookmarks
                 this.bookmarks = this.$storage.get('bookmarks-' + this.bookId, [])
                 this.loadNote()
@@ -767,14 +773,22 @@
                     this.options.fontSize = 16
                 }
             },
-            loadBook(content) {
-                this.book = ePub({
-                    bookPath: content,
-                //    width: 300,
-                //    height: 400,
-                    restore: false,
-                    spreads: false
-                })
+            loadBook(content, isOnline) {
+                if (!isOnline) {
+                    this.book = ePub({
+                        bookPath: content,
+                        restore: false,
+                        spreads: false
+                    })
+                } else {
+
+                    this.book = ePub(content, {
+                        openAs: this.openAs || 'epub',
+                        restore: false,
+                        spreads: false
+                    })
+                }
+                
                 this.book.getMetadata().then(meta => {
                     this.meta = meta
                     // this.meta.cover = this.book.cover
@@ -821,8 +835,8 @@
                         return link
                     }
 
-                    var link = createLink('/static/epub/common.css')
-                    var script = createScript('/static/epub/selection.js')
+                    var link = createLink('../../epubStatic/epub/common.css')
+                    var script = createScript('../../epubStatic/epub/selection.js')
                     var iframe = document.getElementsByTagName('iframe')[0]
                     iframe.contentDocument.head.appendChild(link)
                     iframe.contentDocument.body.appendChild(script)

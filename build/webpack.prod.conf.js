@@ -56,12 +56,12 @@ const webpackConfig = merge(baseWebpackConfig, {
         ? { safe: true, map: { inline: false } }
         : { safe: true }
     }),
-    // generate dist index.html with correct asset hash for caching.
-    // you can customize output by editing /index.html
+    // generate dist epubReader.html with correct asset hash for caching.
+    // you can customize output by editing /epubReader.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: config.build.index,
-      template: 'index.html',
+      template: 'epubReader.html',
       inject: true,
       minify: {
         removeComments: true,
@@ -107,10 +107,10 @@ const webpackConfig = merge(baseWebpackConfig, {
       minChunks: 3
     }),
 
-    // copy custom static assets
+    // copy custom epubStatic assets
     new CopyWebpackPlugin([
       {
-        from: path.resolve(__dirname, '../static'),
+        from: path.resolve(__dirname, '../epubStatic'),
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }

@@ -8,8 +8,8 @@ module.exports = {
   dev: {
 
     // Paths
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsSubDirectory: 'epubStatic',
+    assetsPublicPath: './',
     proxyTable: {},
 
     // Various Dev Server settings
@@ -49,13 +49,13 @@ module.exports = {
   },
 
   build: {
-    // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    // Template for epubReader.html
+    index: path.resolve(__dirname, '../dist/epubReader.html'),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsSubDirectory: 'epubStatic',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

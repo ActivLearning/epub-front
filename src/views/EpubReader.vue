@@ -277,15 +277,15 @@
                 <div class="divider"></div>
                 <div class="menu-list opt-list">
                     <div class="menu-item" title @click="removeHighlight">
-                        <img src="../../static/img/delete.svg" alt />
+                        <img src="../../epubStatic/img/delete.svg" alt />
                         <p>Delete</p>
                     </div>
                     <div class="menu-item" title="Add notes" @click="getNoteBySerStr">
-                        <img src="../../static/img/Note.svg" alt />
+                        <img src="../../epubStatic/img/Note.svg" alt />
                         <p>Note</p>
                     </div>
                     <div class="menu-item" title="Copy to clipboard" @click="copy">
-                        <img src="../../static/img/copy.svg" alt />
+                        <img src="../../epubStatic/img/copy.svg" alt />
                         <p>Copy</p>
                     </div>
                     <!-- <div class="menu-item" title="使用百度搜索" @click="searchNetwork">Search</div> -->
@@ -911,8 +911,8 @@ export default {
                     return link
                 }
 
-                var link = createLink('/static/epub/common.css')
-                var script = createScript('/static/epub/selection.js')
+                var link = createLink('/epubStatic/epub/common.css')
+                var script = createScript('/epubStatic/epub/selection.js')
                 var iframe = document.getElementsByTagName('iframe')[0]
                 iframe.contentDocument.head.appendChild(link)
                 iframe.contentDocument.body.appendChild(script)
